@@ -25,6 +25,22 @@
   background-size: 100% 4px, 3px 100%;
   pointer-events: none;
 }
+        body::after {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: radial-gradient(circle, rgba(0,0,0,0) 60%, rgba(0,0,0,0.7) 100%);
+  z-index: 10000;
+  pointer-events: none;
+  animation: flicker 0.15s infinite;
+}
+
+@keyframes flicker {
+  0% { opacity: 0.9; }
+  50% { opacity: 1; }
+  100% { opacity: 0.9; }
+}
                 header h1 {
             text-shadow: 2px 0 #ff00ff, -2px 0 #00ffff;
             animation: glitch 1s infinite; }
