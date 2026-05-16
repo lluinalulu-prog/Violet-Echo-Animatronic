@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Violet Echo — Архив Систем Наблюдения</title>
+    <style>
+        body {
+            background-color: #000000;
+            color: #e2d9ec;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+            border-bottom: 3px solid #8a2be2;
+            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
+        }
+        .status-top {
+            color: #ffd700;
+            font-size: 16px;
+            font-weight: bold;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            text-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+        }
+        h1 {
+            font-size: 46px;
+            margin: 0;
+            color: #8a2be2;
+            letter-spacing: 3px;
+            text-shadow: 0 0 15px rgba(138, 43, 226, 0.6);
+        }
+        .quote {
+            font-style: italic;
+            color: #888;
+            margin-top: 15px;
+            font-size: 14px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .visual-section {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            margin-bottom: 50px;
+        }
+
+        /* Главное фото профиля (показывает фото с первой камеры) */
+        .photo-frame {
+            width: 280px;
+            height: 380px;
+            border: 3px solid #ffd700;
+            background: #050505;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* СИСТЕМНЫЙ МОНИТОР КАМЕР */
+        .monitor-system {
+            width: 550px;
+            height: 380px;
+            background: #020702;
+            border: 3px solid #8a2be2;
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.4);
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .monitor-screen {
+            flex: 1;
+            background: #040d04;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* ВСЕ ФОТОГРАФИИ КАМЕР ЗАГРУЖАЮТСЯ СРАЗУ В СТРУКТУРУ */
+        .cam-image-layer {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0; left: 0;
+            z-index: 1;
+            opacity: 0; /* Изначально скрыты */
+            transition: opacity 0.15s ease-in-out;
+            filter: contrast(1.1);
+        }
+        /* Класс active делает нужную фотографию видимой */
+        .cam-image-layer.active {
+            opacity: 0.7;
+        }
+        
+        /* Зеленый текст поверх картинки */
+        .camera-overlay-text {
+            position: absolute;
+            z-index: 2;
+            color: #00ff00;
+            font-size: 13px;
+            text-shadow: 0 0 5px #00ff00;
+            padding: 20px;
+            width: 100%;
+            height: 100%;
+            box-sizing: border-box;
+            pointer-events: none;
+        }
+        .cam-tag {
+            position: absolute;
+            top: 15px; left: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 4px 10px;
+            border: 1px solid #00ff00;
+            font-weight: bold;
+        }
+        .cam-logs {
+            position: absolute;
+            bottom: 15px; left: 15px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 8px;
+            font-size: 11px;
+            line-height: 1.4;
+            width: 90%;
+        }
+
+        /* Эффект шума и помех */
+        .screen-noise {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(0deg, rgba(0,255,0,0.06), rgba(0,255,0,0.06) 1px, transparent 1px, transparent 2px);
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        /* Панель кнопок */
+        .monitor-controls {
+            height: 60px;
+            background: #090314;
+            border-top: 2px solid #8a2be2;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0 10px;
+            z-index: 4;
+        }
+        .cam-btn {
+            background: #15052e;
+            color: #ffd700;
+            border: 1px solid #8a2be2;
+            padding: 8px 14px;
+            font-family: 'Courier New', monospace;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .cam-btn:hover {
+            background: #2a0b5c;
+            border-color: #ffd700;
+        }
+        .cam-btn.active {
+            background: #ffd700;
+            color: #000;
+            border-color: #ffd700;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+        }
+
+        /* СЕТКА ИЗ 3-Х КОЛОНОК */
+        .grid-columns {
+            display: flex;
+            gap: 25px;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            border-top: 2px solid #ffd700;
+            padding-top: 30px;
+            margin-bottom: 55px;
+        }
+        .column {
+            flex: 1;
+            min-width: 300px;
+            background: #040406;
+            border: 1px solid #221133;
+            padding: 20px;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .column-title {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 0;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .left-title { color: #8a2be2; border-bottom: 2px solid #8a2be2; }
+        .center-title { color: #ffd700; border-bottom: 2px solid #ffd700; }
+        .right-title { color: #8a2be2; border-bottom: 2px solid #8a2be2; }
+
+        ul { padding-left: 20px; margin: 0; }
+        li { margin-bottom: 12px; line-height: 1.5; font-size: 13px; color: #bcaec9; }
+        .info-p { font-size: 13px; line-height: 1.6; color: #bcaec9; margin: 0 0 15px 0; }
+        .highlight-red { color: #ff4444; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="status-top">Заброшенный аниматроник</div>
+        <h1>VIOLET ECHO (FNAF 1)</h1>
+        <div class="quote">«Не ошибка. Не глюк. Я просто... осталась.»</div>
+    </header>
+
+    <div class="container">
+        
+        <div class="visual-section">
+            <!-- Главное фото профиля -->
+            <div class="photo-frame">
+                <img src="file:///C:/Users/User/Downloads/Без%20названия89_20260516152148%20(3).png" alt="Violet Echo Profile" onerror="this.src='https://placehold.co';">
+            </div>
+
+            <!-- ИНТЕРАКТИВНЫЙ МОНИТОР -->
+            <div class="monitor-system">
+                <div class="monitor-screen">
+                    <div class="screen-noise"></div>
+                    
+                    <div class="camera-overlay-text">
+                        <div id="cam-tag-id" class="cam-tag">CAM 1C</div>
+                        <div id="cam-logs-id" class="cam-logs">
+                            ЛОКАЦИЯ: ПИРАТСКАЯ БУХТА<br>
+                            АНАЛИЗ: Чаще всего появляется здесь. Может стоять неподвижно в темноте и смотреть прямо в камеру.
+                        </div>
+                    </div>
+
+                    <!-- ВСЕ ФОТОГРАФИИ НАХОДЯТСЯ ТУТ ОДНОВРЕМЕННО И БОЛЬШЕ НЕ СБРАСЫВАЮТСЯ -->
+                    <img id="img-cam1c" class="cam-image-layer active" src="file:///C:/Users/User/Downloads/Без%20названия90_20260516154748%20(1).png" alt="Камера 1C" onerror="showPlaceholder(this, 'CAM 1C');">
+                    <img id="img-cam3" class="cam-image-layer" src="file:///C:/Users/User/Downloads/Без%20названия90_20260516154751.png" alt="Камера 3" onerror="showPlaceholder(this, 'CAM 3');">
+                    <img id="img-cam5" class="cam-image-layer" src="file:///C:/Users/User/Downloads/Без%20названия90_20260516154754.png" alt="Камера 5" onerror="showPlaceholder(this, 'CAM 5');">
+                    <img id="img-cam7" class="cam-image-layer" src="file:///C:/Users/User/Downloads/Без%20названия90_20260516154756.png" alt="Камера 7" onerror="showPlaceholder(this, 'CAM 7');">
+                </div>
+                
+                <!-- Панель управления камерами -->
+                <div class="monitor-controls">
+                    <button id="btn-cam1c" class="cam-btn active" onclick="changeActiveCamera('1C', 'ПИРАТСКАЯ БУХТА', 'Чаще всего появляется здесь. Может стоять неподвижно в темноте и смотреть прямо в камеру.')">CAM 1C</button>
+                    <button id="btn-cam3" class="cam-btn" onclick="changeActiveCamera('3', 'ЗАПАДНЫЙ ХОЛЛ', 'Может медленно идти по холлу. Если не смотреть — продолжит двигаться к офису.')">CAM 3</button>
+                    <button id="btn-cam5" class="cam-btn" onclick="changeActiveCamera('5', 'ЗАКУЛИСЬЕ', 'Редко, но может появиться в закулисье. Выглядит как статичная фигура, исчезает при переключении камер.')">CAM 5</button>
+                    <button id="btn-cam7" class="cam-btn" onclick="changeActiveCamera('7', 'ПРАВЫЙ ВЕНТ. ХОД', 'Может быть замечена в вентиляционном ходу. Двигается быстро и непредсказуемо.')">CAM 7</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Нижняя часть: Текстовые колонки -->
+        <div class="grid-columns">
+            
+            <div class="column">
+                <h3 class="column-title left-title">Характер</h3>
+                <ul>
+                    <li>Тихая, замкнутая, наблюдательная.</li>
+                    <li>Эмоциональная, но скрывает это.</li>
+                    <li>Легко привязывается к людям.</li>
+                    <li>Испытывает страх одиночества.</li>
+                    <li>Нестабильна при сильном стрессе.</li>
+                    <li>Может быть милой... или очень опасной.</li>
+                </ul>
+                <div class="quote" style="text-align: center; margin-top: 25px; color: #a370d7;">
+                    "Я не хочу тебе вредить... Просто не уходи."
+                </div>
+            </div>
+
+            <div class="column">
+                <h3 class="column-title center-title">Как защититься</h3>
+                <ul>
+                    <li>Часто проверяй камеры, особенно <span>CAM 1C, 3, 5 и 7</span>.</li>
+                    <li>Если она находится в холле или вентиляции — закрой соответствующую дверь.</li>
+                    <li>Держи свет включенным в холле — она не любит яркий свет.</li>
+                    <li>Если она смотрит прямо в камеру — отведи взгляд на другую камеру на несколько секунд.</li>
+                    <li>Не перебарщивай с дверями и светом — она может стать агрессивной.</li>
+                    <li class="highlight-red">Если она добралась до офиса, она не будет сразу атаковать. Она может просто стоять... смотреть... иногда говорить. Но если она улыбается — беги.</li>
+                </ul>
+            </div>
+
+            <div class="column">
+                <h3 class="column-title right-title">Кем является в пиццерии</h3>
+                <p class="info-p" style="color: #ffd700; font-weight: bold;">Бывший развлекательный аниматроник</p>
+                <p class="info-p">
+                    Violet Echo — это прототип аниматроника, созданный для новой линейки развлечений. Она должна была быть "особенной" — аниматроником, который может эмоционально реагировать на детей, запоминать их и создавать уникальный опыт.
+                </p>
+                
+                <p class="info-p" style="color: #8a2be2; font-weight: bold; margin-top: 20px;">Чем занималась:</p>
+                <ul>
+                    <li>Пела песни</li>
+                    <li>Танцевала на малой сцене</li>
+                    <li>Общалась с детьми (по прототипу)</li>
+                    <li>Собирала данные о поведении детей</li>
+                    <li>Должна была стать "лицом будущего"</li>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+
+<script>
+    function changeActiveCamera(camNumber, locationName, descriptionText) {
+        // Скрываем абсолютно все слои с картинками
+        document.querySelectorAll('.cam-image-layer').forEach(img => img.classList.remove('active'));
+        
+        // Включаем видимость слоя конкретно выбранной камеры
+        const targetImg = document.getElementById('img-cam' + camNumber.toLowerCase());
+        if (targetImg) {
+            targetImg.classList.add('active');
+        }
+        
+        // Обновляем текстовые плашки поверх экрана монитора
+        document.getElementById('cam-tag-id').innerText = 'CAM ' + camNumber;
+        document.getElementById('cam-logs-id').innerHTML = 'ЛОКАЦИЯ: ' + locationName + '<br>АНАЛИЗ: ' + descriptionText;
+        
+        // Меняем активную кнопку управления
+        document.querySelectorAll('.cam-btn').forEach(btn => btn.classList.remove('active'));
+        document.getElementById('btn-cam' + camNumber.toLowerCase()).classList.add('active');
+    }
+
+    // Резервная заглушка, если какого-то файла изображения физически нет в папке
+    function showPlaceholder(img, camName) {
+        img.src = 'https://placehold.co' + camName + '+ONLINE';
+    }
+</script>
+</body>
+</html>
