@@ -57,7 +57,6 @@
             margin-bottom: 50px;
         }
 
-        /* Главное фото профиля (показывает фото с первой камеры) */
         .photo-frame {
             width: 280px;
             height: 380px;
@@ -75,7 +74,6 @@
             object-fit: cover;
         }
 
-        /* СИСТЕМНЫЙ МОНИТОР КАМЕР */
         .monitor-system {
             width: 550px;
             height: 380px;
@@ -94,7 +92,6 @@
             overflow: hidden;
         }
         
-        /* ВСЕ ФОТОГРАФИИ КАМЕР ЗАГРУЖАЮТСЯ СРАЗУ В СТРУКТУРУ */
         .cam-image-layer {
             width: 100%;
             height: 100%;
@@ -102,16 +99,14 @@
             position: absolute;
             top: 0; left: 0;
             z-index: 1;
-            opacity: 0; /* Изначально скрыты */
+            opacity: 0;
             transition: opacity 0.15s ease-in-out;
             filter: contrast(1.1);
         }
-        /* Класс active делает нужную фотографию видимой */
         .cam-image-layer.active {
             opacity: 0.7;
         }
         
-        /* Зеленый текст поверх картинки */
         .camera-overlay-text {
             position: absolute;
             z-index: 2;
@@ -142,7 +137,6 @@
             width: 90%;
         }
 
-        /* Эффект шума и помех */
         .screen-noise {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -151,7 +145,6 @@
             pointer-events: none;
         }
 
-        /* Панель кнопок */
         .monitor-controls {
             height: 60px;
             background: #090314;
@@ -183,7 +176,6 @@
             box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
         }
 
-        /* СЕТКА ИЗ 3-Х КОЛОНОК */
         .grid-columns {
             display: flex;
             gap: 25px;
@@ -233,9 +225,9 @@
     <div class="container">
         
         <div class="visual-section">
-            <!-- Главное фото профиля -->
+            <!-- Главное фото профиля (с авто-подстраховкой под .png формат) -->
             <div class="photo-frame">
-                <img src="file:///C:/Users/User/Downloads/Без%20названия89_20260516152148%20(3).png" alt="Violet Echo Profile" onerror="this.src='https://placehold.co';">
+                <img src="file:///C:/Users/User/Downloads/Без-названия89_20260516152148-_3_.jpg" alt="Violet Echo Profile" onclick="window.open(this.src)" onerror="if(this.src.indexOf('.jpg') !== -1) this.src='cam1c.png';">
             </div>
 
             <!-- ИНТЕРАКТИВНЫЙ МОНИТОР -->
@@ -251,14 +243,13 @@
                         </div>
                     </div>
 
-                    <!-- ВСЕ ФОТОГРАФИИ НАХОДЯТСЯ ТУТ ОДНОВРЕМЕННО И БОЛЬШЕ НЕ СБРАСЫВАЮТСЯ -->
-                    <img id="img-cam1c" class="cam-image-layer active" src="file:///C:/Users/User/Downloads/Без%20названия90_20260516154748%20(1).png" alt="Камера 1C" onerror="showPlaceholder(this, 'CAM 1C');">
-                    <img id="img-cam3" class="cam-image-layer" src="file:///C:/Users/User/Downloads/Без%20названия90_20260516154751.png" alt="Камера 3" onerror="showPlaceholder(this, 'CAM 3');">
-                    <img id="img-cam5" class="cam-image-layer" src="file:///C:/Users/User/Downloads/Без%20названия90_20260516154754.png" alt="Камера 5" onerror="showPlaceholder(this, 'CAM 5');">
-                    <img id="img-cam7" class="cam-image-layer" src="file:///C:/Users/User/Downloads/Без%20названия90_20260516154756.png" alt="Камера 7" onerror="showPlaceholder(this, 'CAM 7');">
+                    <!-- Слои картинок с авто-подстраховкой на случай, если реальный формат файлов — png -->
+                    <img id="img-cam1c" class="cam-image-layer active" src="file:///C:/Users/User/Downloads/Без-названия90_20260516154748.jpg" alt="Камера 1C" onerror="if(this.src.indexOf('.jpg') !== -1) this.src='cam1c.png';">
+                    <img id="img-cam3" class="cam-image-layer" src="file:///C:/Users/User/Downloads/Без-названия90_20260516154751.jpg" alt="Камера 3" onerror="if(this.src.indexOf('.jpg') !== -1) this.src='cam3.png';">
+                    <img id="img-cam5" class="cam-image-layer" src="file:///C:/Users/User/Downloads/Без-названия90_20260516154754.jpg" alt="Камера 5" onerror="if(this.src.indexOf('.jpg') !== -1) this.src='cam5.png';">
+                    <img id="img-cam7" class="cam-image-layer" src="file:///C:/Users/User/Downloads/Без-названия90_20260516154756.jpg" alt="Камера 7" onerror="if(this.src.indexOf('.jpg') !== -1) this.src='cam7.png';">
                 </div>
                 
-                <!-- Панель управления камерами -->
                 <div class="monitor-controls">
                     <button id="btn-cam1c" class="cam-btn active" onclick="changeActiveCamera('1C', 'ПИРАТСКАЯ БУХТА', 'Чаще всего появляется здесь. Может стоять неподвижно в темноте и смотреть прямо в камеру.')">CAM 1C</button>
                     <button id="btn-cam3" class="cam-btn" onclick="changeActiveCamera('3', 'ЗАПАДНЫЙ ХОЛЛ', 'Может медленно идти по холлу. Если не смотреть — продолжит двигаться к офису.')">CAM 3</button>
@@ -268,9 +259,7 @@
             </div>
         </div>
 
-        <!-- Нижняя часть: Текстовые колонки -->
         <div class="grid-columns">
-            
             <div class="column">
                 <h3 class="column-title left-title">Характер</h3>
                 <ul>
@@ -304,8 +293,6 @@
                 <p class="info-p">
                     Violet Echo — это прототип аниматроника, созданный для новой линейки развлечений. Она должна была быть "особенной" — аниматроником, который может эмоционально реагировать на детей, запоминать их и создавать уникальный опыт.
                 </p>
-                
-                <p class="info-p" style="color: #8a2be2; font-weight: bold; margin-top: 20px;">Чем занималась:</p>
                 <ul>
                     <li>Пела песни</li>
                     <li>Танцевала на малой сцене</li>
@@ -314,34 +301,18 @@
                     <li>Должна была стать "лицом будущего"</li>
                 </ul>
             </div>
-
         </div>
-
     </div>
 
 <script>
     function changeActiveCamera(camNumber, locationName, descriptionText) {
-        // Скрываем абсолютно все слои с картинками
         document.querySelectorAll('.cam-image-layer').forEach(img => img.classList.remove('active'));
-        
-        // Включаем видимость слоя конкретно выбранной камеры
         const targetImg = document.getElementById('img-cam' + camNumber.toLowerCase());
-        if (targetImg) {
-            targetImg.classList.add('active');
-        }
-        
-        // Обновляем текстовые плашки поверх экрана монитора
+        if (targetImg) { targetImg.classList.add('active'); }
         document.getElementById('cam-tag-id').innerText = 'CAM ' + camNumber;
         document.getElementById('cam-logs-id').innerHTML = 'ЛОКАЦИЯ: ' + locationName + '<br>АНАЛИЗ: ' + descriptionText;
-        
-        // Меняем активную кнопку управления
         document.querySelectorAll('.cam-btn').forEach(btn => btn.classList.remove('active'));
         document.getElementById('btn-cam' + camNumber.toLowerCase()).classList.add('active');
-    }
-
-    // Резервная заглушка, если какого-то файла изображения физически нет в папке
-    function showPlaceholder(img, camName) {
-        img.src = 'https://placehold.co' + camName + '+ONLINE';
     }
 </script>
 </body>
