@@ -8,10 +8,20 @@
 <link rel="shortcut icon" href="favicon.ico?v=2" />
 <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png?v=2" />
     <style>
+        body::before {
+  content: " ";
+  display: block;
+  position: fixed;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+              linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+  z-index: 9999;
+  background-size: 100% 4px, 3px 100%;
+  pointer-events: none;
+}
                 header h1 {
             text-shadow: 2px 0 #ff00ff, -2px 0 #00ffff;
-            animation: glitch 1s infinite;
-        }
+            animation: glitch 1s infinite; }
 
         @keyframes glitch {
             0% { transform: translate(0); }
