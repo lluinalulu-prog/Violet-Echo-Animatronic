@@ -25,15 +25,23 @@
   background-size: 100% 4px, 3px 100%;
   pointer-events: none;
 }
-        body::after {
+       body::after {
   content: " ";
   display: block;
   position: fixed;
   top: 0; left: 0; bottom: 0; right: 0;
-  background: radial-gradient(circle, rgba(0,0,0,0) 60%, rgba(0,0,0,0.7) 100%);
+  /* Сделаем края еще темнее */
+  background: radial-gradient(circle, rgba(0,0,0,0) 40%, rgba(0,0,0,0.9) 100%);
   z-index: 10000;
   pointer-events: none;
-  animation: flicker 0.15s infinite;
+  /* Сделаем мигание чуть медленнее, но сильнее */
+  animation: flicker 0.1s infinite;
+}
+
+@keyframes flicker {
+  0% { opacity: 0.5; }
+  50% { opacity: 1; }
+  100% { opacity: 0.5; }
 }
 
 @keyframes flicker {
@@ -368,5 +376,6 @@
         document.getElementById('btn-cam' + camNumber.toLowerCase()).classList.add('active');
     }
 </script>
+<div class="warning-text">ВНИМАНИЕ: СИСТЕМА ПОВРЕЖДЕНА</div>
 </body>
 </html>
