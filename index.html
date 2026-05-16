@@ -57,6 +57,7 @@
             margin-bottom: 50px;
         }
 
+        /* Красивая золотая рамка для главного фото персонажа */
         .photo-frame {
             width: 280px;
             height: 380px;
@@ -74,6 +75,7 @@
             object-fit: cover;
         }
 
+        /* МОНИТОР КАМЕР */
         .monitor-system {
             width: 550px;
             height: 380px;
@@ -225,12 +227,12 @@
     <div class="container">
         
         <div class="visual-section">
-            <!-- Главное аватарное фото берет чистый файл cam1c.jpg -->
+            <!-- ЗДЕСЬ ТЕПЕРЬ ВСЕГДА СТОИТ ГЛАВНОЕ ФОТО ПЕРСОНАЖА АВАТАР.JPG -->
             <div class="photo-frame">
-                <img src="cam1c.jpg" alt="Violet Echo Profile">
+                <img src="avatar.jpg" alt="Violet Echo Official Art">
             </div>
 
-            <!-- ИНТЕРАКТИВНЫЙ МОНИТОР -->
+            <!-- ИНТЕРАКТИВНЫЙ МОНИТОР КАМЕР -->
             <div class="monitor-system">
                 <div class="monitor-screen">
                     <div class="screen-noise"></div>
@@ -243,7 +245,6 @@
                         </div>
                     </div>
 
-                    <!-- Чистые и короткие ссылки на файлы внутри репозитория -->
                     <img id="img-cam1c" class="cam-image-layer active" src="cam1c.jpg" alt="Камера 1C">
                     <img id="img-cam3" class="cam-image-layer" src="cam3.jpg" alt="Камера 3">
                     <img id="img-cam5" class="cam-image-layer" src="cam5.jpg" alt="Камера 5">
@@ -309,8 +310,10 @@
         document.querySelectorAll('.cam-image-layer').forEach(img => img.classList.remove('active'));
         const targetImg = document.getElementById('img-cam' + camNumber.toLowerCase());
         if (targetImg) { targetImg.classList.add('active'); }
+        
         document.getElementById('cam-tag-id').innerText = 'CAM ' + camNumber;
         document.getElementById('cam-logs-id').innerHTML = 'ЛОКАЦИЯ: ' + locationName + '<br>АНАЛИЗ: ' + descriptionText;
+        
         document.querySelectorAll('.cam-btn').forEach(btn => btn.classList.remove('active'));
         document.getElementById('btn-cam' + camNumber.toLowerCase()).classList.add('active');
     }
